@@ -1,8 +1,8 @@
 const router = require('express').Router()
 const Testimony = require('../models/Testimony')
 
-// @desc    Get all testimonies
-// @route   GET /testimonies
+// @desc    Register user
+// @route   PUT /user
 router.get('/', async (req, res) => {
 
     try {

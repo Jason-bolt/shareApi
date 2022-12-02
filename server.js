@@ -16,7 +16,7 @@ try {
     app.use(express.json())
     
     // Routes
-    app.use('/testimonies', require('./routes/public'))
+    app.use('/api/v1/testimonies', require('./routes/public'))
     
     
     const PORT = process.env.PORT || 3000
