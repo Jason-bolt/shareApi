@@ -17,6 +17,7 @@ try {
     
     // Routes
     app.use('/api/v1/testimonies', require('./routes/public'))
+    app.use('/api/v1', require('./routes/auth'))
     
     
     const PORT = process.env.PORT || 3000
