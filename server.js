@@ -2,6 +2,9 @@ const express = require('express')
 const path = require('path')
 const dotenv = require('dotenv')
 const mongoose = require('mongoose')
+const morgan = require('morgan')
+const helmet = require('helmet')
+const cors = require('cors')
 
 // Configure dotenv
 dotenv.config({ path: './config/config.env' })
@@ -14,6 +17,9 @@ try {
 
     app.use(express.urlencoded({ extended: true }))
     app.use(express.json())
+    app.use(morgan('combined'))
+    app.use(helmet())
+    app.use(cors())
     
     // Routes
     app.use('/api/v1/testimonies', require('./routes/public'))
