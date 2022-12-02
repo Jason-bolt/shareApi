@@ -1,5 +1,6 @@
 const User = require("../models/User")
 const bcrypt = require('bcrypt')
+const _ = require('lodash')
 
 exports.create = async (req, res) => {
     const { email, name, password, confirm_password } = req.body
@@ -41,13 +42,23 @@ exports.create = async (req, res) => {
                     name: req.body.name,
                     password: hashed_password
                 }
-                // await User.create()
+                // await User.create(newUser)
     
-                res.status(201).send(newUser)
+                res.status(201).send(_.omit(newUser, ['password']))
             }
     
         } catch (err) {
             res.status(500).send("Server error!")        
         }
+    }
+}
+
+exports.getById = async (req, res) => {
+    console.log(req.params.id)
+    try {
+        const user = await User.findById(req.params.id).lean()
+        res.status(200).send(_.omit(user, ['password', '__v']))
+    } catch (err) {
+        res.status(500).send("Server error!")
     }
 }
