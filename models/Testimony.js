@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const User = require('./User.ts')
+const User = require('./User')
 
 const TestimonySchema = new mongoose.Schema({
     testimony: {
