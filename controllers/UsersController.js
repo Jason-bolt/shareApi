@@ -1,6 +1,7 @@
 const User = require("../models/User")
 const bcrypt = require('bcrypt')
 const _ = require('lodash')
+const jwt = require("jsonwebtoken")
 
 exports.create = async (req, res) => {
     const { email, name, password, confirm_password } = req.body
@@ -69,7 +70,18 @@ exports.patchById = async (req, res) => {
         await User.findByIdAndUpdate(req.params.id, req.body)
         res.status(204).send({})
     } catch (err) {
-        res.status(500).send("Server error!")
+        res.status(500).send({ errors: err })
     }
 
+}
+
+exports.login = (req, res) => {
+    try {
+        const access_token = jwt.sign(req.body, process.env.JWT_ACCESS_TOKEN_SECRET, { expiresIn: "15m" })
+        const refresh_token = jwt.sign(req.body, process.env.JWT_REFRESH_TOKEN_SECRET, { expiresIn: "20m" })
+
+        res.status(200).send({ accessToken: access_token, refreshToken: refresh_token })
+    } catch (err) {
+        res.status(500).send({ errors: err })
+    }
 }

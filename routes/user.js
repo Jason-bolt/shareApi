@@ -1,9 +1,17 @@
 const router = require('express').Router()
 const UsersController = require('../controllers/UsersController')
+const UserVerificationMiddleware = require('../middlewares/verifyUserMiddleware')
 
 // @desc    Register user
-// @route   PUT /register
+// @route   POST /register
 router.post('/register', [UsersController.create])
+
+// @desc    Login user
+// @route   POST /login
+router.post('/login', [
+    UserVerificationMiddleware.isPasswordAndUserMatch,
+    UsersController.login
+])
 
 // @desc    Get one user
 // @route   GET /user/:id
