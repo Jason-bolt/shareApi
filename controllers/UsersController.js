@@ -54,11 +54,22 @@ exports.create = async (req, res) => {
 }
 
 exports.getById = async (req, res) => {
-    console.log(req.params.id)
     try {
         const user = await User.findById(req.params.id).lean()
         res.status(200).send(_.omit(user, ['password', '__v']))
     } catch (err) {
         res.status(500).send("Server error!")
     }
+}
+
+exports.patchById = async (req, res) => {
+
+    console.log(req.body)
+    try {
+        await User.findByIdAndUpdate(req.params.id, req.body)
+        res.status(204).send({})
+    } catch (err) {
+        res.status(500).send("Server error!")
+    }
+
 }
