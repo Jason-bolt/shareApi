@@ -2,6 +2,7 @@ const User = require("../models/User")
 const bcrypt = require('bcrypt')
 const _ = require('lodash')
 const jwt = require("jsonwebtoken")
+const Testimony = require("../models/Testimony")
 
 exports.create = async (req, res) => {
     const { email, name, password, confirm_password } = req.body
@@ -81,6 +82,16 @@ exports.login = (req, res) => {
         const refresh_token = jwt.sign(req.body, process.env.JWT_REFRESH_TOKEN_SECRET, { expiresIn: "20m" })
 
         res.status(200).send({ accessToken: access_token, refreshToken: refresh_token })
+    } catch (err) {
+        res.status(500).send({ errors: err })
+    }
+}
+
+exports.getProfile = async (req, res) => {
+    try {
+        const userTestimonies = await Testimony.find({ user: req.user.id })
+        const user = JSON.stringify(req.user)
+        res.status(200).send(`user: ${user}, testimonies: ${userTestimonies}`)
     } catch (err) {
         res.status(500).send({ errors: err })
     }

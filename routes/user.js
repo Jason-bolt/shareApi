@@ -21,5 +21,12 @@ router.get('/user/:id', [UsersController.getById])
 // @route   PATCH /user/:id
 router.patch('/user/:id', [UsersController.patchById])
 
+// @desc    Profile
+// @route   GET /profile
+router.get('/profile', [
+    UserVerificationMiddleware.validateToken,
+    UsersController.getProfile
+])
+
 
 module.exports = router

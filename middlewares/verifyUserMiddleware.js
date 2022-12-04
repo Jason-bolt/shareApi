@@ -1,5 +1,6 @@
 const User = require("../models/User")
 const bcrypt = require('bcrypt')
+const jwt = require("jsonwebtoken")
 
 exports.isPasswordAndUserMatch = async (req, res, next) => {
     const user = await User.findOne({ email: req.body.email })
@@ -21,5 +22,23 @@ exports.isPasswordAndUserMatch = async (req, res, next) => {
         }
     } catch (err) {
         res.status(500).send({ errors: err })
+    }
+}
+
+exports.validateToken = (req, res, next) => {
+    const authHeader = req.headers["authorization"]
+    const token = authHeader.split(" ")[1] // Getting the token from headers
+
+    if (token == null){
+        res.status(400).send("Token not present")
+    }else{
+        jwt.verify(token, process.env.JWT_ACCESS_TOKEN_SECRET, (err, user) => {
+            if (err){
+                res.send(403).send("Token invalid")
+            }else{
+                req.user = user
+                next() // Move to next function
+            }
+        })
     }
 }
