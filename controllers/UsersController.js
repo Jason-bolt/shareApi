@@ -116,3 +116,20 @@ exports.addTestimony = async (req, res) => {
         res.status(500).send({ error: err })
     }
 }
+
+exports.deleteTestimony = async (req, res) => {
+    try {
+        testimony_id = req.params.id
+        const testimony = await Testimony.findById(testimony_id)
+
+        // Check if testimony exists
+        if (!testimony){
+            res.status(400).send("Testimony not found")
+        }else{
+            await Testimony.remove({ _id: testimony_id })
+            res.status(200).send("Testimony deleted")
+        }
+    } catch (err) {
+        res.status(500).send({ error: err })
+    }
+}

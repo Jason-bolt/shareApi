@@ -37,6 +37,12 @@ router.post('/testimony', [
     UserVerificationMiddleware.validateToken,
     UsersController.addTestimony
 ])
+// @desc    Delete testimony
+// @route   DELETE /testimony
+router.delete('/testimony/:id', [
+    UserVerificationMiddleware.validateToken,
+    UsersController.deleteTestimony
+])
 
 
 module.exports = router
