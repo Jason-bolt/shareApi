@@ -78,8 +78,8 @@ exports.patchById = async (req, res) => {
 
 exports.login = (req, res) => {
     try {
-        const access_token = jwt.sign(req.body, process.env.JWT_ACCESS_TOKEN_SECRET, { expiresIn: "15m" })
-        const refresh_token = jwt.sign(req.body, process.env.JWT_REFRESH_TOKEN_SECRET, { expiresIn: "20m" })
+        const access_token = jwt.sign(req.body, process.env.JWT_ACCESS_TOKEN_SECRET, { expiresIn: process.env.TEST_TOKEN_EXPIRY })
+        const refresh_token = jwt.sign(req.body, process.env.JWT_REFRESH_TOKEN_SECRET, { expiresIn: process.env.TEST_REFRESH_TOKEN_EXPIRY })
 
         res.status(200).send({ accessToken: access_token, refreshToken: refresh_token })
     } catch (err) {
@@ -94,5 +94,25 @@ exports.getProfile = async (req, res) => {
         res.status(200).send(`user: ${user}, testimonies: ${userTestimonies}`)
     } catch (err) {
         res.status(500).send({ errors: err })
+    }
+}
+
+exports.addTestimony = async (req, res) => {
+    try {
+        const testimony = req.body.testimony.trim()
+        // Check if there is a testimony
+        if (!testimony || testimony.length == 0){
+            res.status(400).send("Testimony is required")
+        }else{
+            const payload = {
+                testimony: testimony,
+                tags: req.body.tags,
+                user: req.user.id
+            }
+            await Testimony.create(payload)
+            res.status(201).send(payload)
+        }
+    } catch (err) {
+        res.status(500).send({ error: err })
     }
 }

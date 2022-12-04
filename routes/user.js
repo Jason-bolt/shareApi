@@ -19,13 +19,23 @@ router.get('/user/:id', [UsersController.getById])
 
 // @desc    Update user data
 // @route   PATCH /user/:id
-router.patch('/user/:id', [UsersController.patchById])
+router.patch('/user/:id', [
+    UserVerificationMiddleware.validateToken,
+    UsersController.patchById
+])
 
-// @desc    Profile
+// @desc    Display profile, user info and user testimonies
 // @route   GET /profile
 router.get('/profile', [
     UserVerificationMiddleware.validateToken,
     UsersController.getProfile
+])
+
+// @desc    Add testimony
+// @route   POST /testimony
+router.post('/testimony', [
+    UserVerificationMiddleware.validateToken,
+    UsersController.addTestimony
 ])
 
 
