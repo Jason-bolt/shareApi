@@ -37,11 +37,18 @@ router.post('/testimony', [
     UserVerificationMiddleware.validateToken,
     UsersController.addTestimony
 ])
+
 // @desc    Delete testimony
 // @route   DELETE /testimony
 router.delete('/testimony/:id', [
     UserVerificationMiddleware.validateToken,
     UsersController.deleteTestimony
+])
+
+// @desc    Refresh tokens
+// @route   POST /refreshTokens
+router.post('/refreshTokens', [
+    UsersController.refreshTokens
 ])
 
 

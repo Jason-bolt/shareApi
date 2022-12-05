@@ -87,6 +87,29 @@ exports.login = (req, res) => {
     }
 }
 
+exports.refreshTokens = (req, res) => {
+    try {
+        const refresh_token = req.body.refreshToken
+        // Check if it's there
+        if (!refresh_token){
+            res.status(400).send("Refresh token is required")
+        }else{
+            // Verify token
+            const user = jwt.verify(refresh_token, process.env.JWT_REFRESH_TOKEN_SECRET)
+            if (user.id === req.body.user_id){
+                const access_token = jwt.sign(user, process.env.JWT_ACCESS_TOKEN_SECRET)
+                const refresh_token = jwt.sign(user, process.env.JWT_REFRESH_TOKEN_SECRET)
+
+                res.status(200).send({ accessToken: access_token, refreshToken: refresh_token })
+            }else{
+                res.status(400).send("Invalid token")
+            }
+        }
+    } catch (err) {
+        res.status(500).send({ error: err })
+    }
+}
+
 exports.getProfile = async (req, res) => {
     try {
         const userTestimonies = await Testimony.find({ user: req.user.id })
